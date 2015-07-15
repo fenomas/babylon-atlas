@@ -152,7 +152,8 @@ Atlas.prototype.dispose = function() {
   this._data = null
   this._scene = null
   this._BABYLON = null
-  this.frames.length = 0
+  this.frames.length = 0  
+  this._texcache.length = 0
 }
 
 
