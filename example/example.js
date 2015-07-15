@@ -1,4 +1,4 @@
-// globals BABYLON
+/* global BABYLON */
 
 
 // set up standard sort of scene
@@ -18,6 +18,7 @@ var createAtlas = require('../')
 
 // make an atlas for a given image+JSON
 var myAtlas = createAtlas('sprites.png', 'sprites.json', scene, BABYLON)
+window.atlas = myAtlas
 
 var mesh = myAtlas.makeSpriteMesh()
 mesh.position.y = 1.2
@@ -47,7 +48,13 @@ mesh2.position.y = 1.2
 mesh2.position.z = 1
 mesh2.position.x = 1
 
-var mesh3 = myAtlas.makeSpriteMesh( 'sprites2 instance 10001' )
+var mesh3 = BABYLON.Mesh.CreatePlane('m3', 1, scene)
+mesh3.material = new BABYLON.StandardMaterial('mat', scene)
+mesh3.material.specularColor = new BABYLON.Color3(0,0,0)
+mesh3.material.emissiveColor = new BABYLON.Color3(1,1,1)
+mesh3.material.backFaceCulling = false
+mesh3.material.diffuseTexture = myAtlas.getTexture('sprites2 instance 10002')
+
 mesh3.position.y = .8
 mesh3.position.z = -1
 mesh3.position.x = -1
