@@ -14,6 +14,9 @@ var mesh = myAtlas.makeSpriteMesh( 'player_walk_001' )
 
 // use the atlas to change the mesh to a different sprite
 myAtlas.setMeshFrame( mesh, 'player_jump' )
+
+// or just grab a texture for a particular sprite
+myAtlas.getTexture( 'player_jump' ) // returns a BABYLON.Texture
 ```
 
 Live demo [here](http://andyhall.github.io/babylon-atlas/example/).
@@ -65,5 +68,9 @@ var mesh = atlas.makeSpriteMesh( frame, material )
 //    frame: as previous
 atlas.setMeshFrame( mesh, frame ) 
 
-sprite.dispose()
+// returns a plain Babylon texture with the right UVs for the given frame 
+myAtlas.getTexture( frame )
+
+// disposal
+myAtlas.dispose()
 ```

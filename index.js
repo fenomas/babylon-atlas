@@ -1,3 +1,4 @@
+/* global BABYLON */
 
 module.exports = Atlas
 
@@ -17,6 +18,7 @@ function Atlas(imgURL, jsonURL, scene, BAB, noMip, sampling) {
   this._scene = scene
   this._BABYLON = BAB
   this._data = null
+  this._texcache = {}
 
   this.frames = []
 
@@ -57,6 +59,23 @@ function initSelf(self) {
 }
 
 
+// Get a texture with the right uv settings for a given frame
+
+Atlas.prototype.getTexture = function(frame) {
+  if (this._texcache[frame]) return this._texcache[frame]
+  
+  var tex = this._baseTexture.clone()
+  setTextureSettings(this, frame, tex)
+  this._texcache[frame] = tex
+  return tex
+}
+
+
+// set an existing texture's offsets etc.
+Atlas.prototype.setTextureToFrame = function(tex, frame) {
+  setTextureSettings(this, frame, tex)
+}
+
 
 
 Atlas.prototype.makeSpriteMesh = function(frame, material) {
@@ -92,42 +111,52 @@ Atlas.prototype.setMeshFrame = function(mesh, frame) {
 
 
 // Set a mesh's texture to show a given frame of the altas.
-// Transparently handles case where atlas hasn't finished loading.
 // Also decorates mesh object with property to track current atlas frame
 
 function setFrame(self, mesh, frame) {
+  if (frame === mesh._currentAtlasFrame) return
+
+  setTextureSettings(self, frame, mesh.material.diffuseTexture)
+
+  mesh._currentAtlasFrame = frame
+}
+
+
+// function where the main magic is
+// defers own call if json/texture data is still loading
+
+function setTextureSettings(self, frame, tex) {
   if (!self._ready) {
-    setTimeout(function() { setFrame(self, mesh, frame) }, 10)
+    setTimeout(function() { setTextureSettings(self, frame, tex) }, 10)
     return
   }
-
-  var framestr = (typeof frame === 'number') ? self.frames[frame] : frame
-  if (framestr === mesh._currentAtlasFrame) return
   
+  var framestr = (typeof frame === 'number') ? self.frames[frame] : frame
   var dat = self._data.frames[framestr]
   if (!dat) {
-    throw new Error('babylon-atlas: frame "'+frame+'" not found in atlas')
-    return
+    throw new Error('babylon-atlas: frame "'+framestr+'" not found in atlas')
   }
-
+  
   var size = self._baseTexture.getSize()
-  var tex = mesh.material.diffuseTexture
-
   var w = dat.frame.w
   var h = dat.frame.h
   var x = dat.frame.x
   var y = dat.frame.y
+  var sw = size.width
+  var sh = size.height
 
-  tex.uScale = w/size.width
-  tex.vScale = h/size.height
-  tex.uOffset = ( size.width /2 - x)/w - 0.5
-  tex.vOffset = (-size.height/2 + y)/h + 0.5
-
-  mesh._currentAtlasFrame = framestr
+  // in Babylon 2.2 and below:
+  // tex.uScale = w/sw
+  // tex.vScale = h/sh
+  // tex.uOffset = ( sw /2 - x)/w - 0.5
+  // tex.vOffset = (-sh/2 + y)/h + 0.5
+  
+  // Babylon 2.3 and above:
+  tex.uScale =   w / sw
+  tex.vScale =   h / sh
+  tex.uOffset =  x / sw
+  tex.vOffset =  (sh-y-h)/sh
 }
-
-
-
 
 
 
@@ -138,7 +167,8 @@ Atlas.prototype.dispose = function() {
   this._data = null
   this._scene = null
   this._BABYLON = null
-  this.frames.length = 0
+  this.frames.length = 0  
+  this._texcache.length = 0
 }
 
 
