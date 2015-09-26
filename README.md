@@ -3,6 +3,10 @@ babylon-atlas
 
 Wrangles sprites out of texture atlases for Babylon.js
 
+**Note:** v0.2.0 of this module updates to support breaking changes in 
+Babylon.js v2.3, currently in preview. For Babylon 2.2 and below move this
+repo to any commit before v0.2.0.
+
 ### Usage:
 
 ```javascript
