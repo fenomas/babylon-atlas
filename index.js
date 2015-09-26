@@ -142,11 +142,20 @@ function setTextureSettings(self, frame, tex) {
   var h = dat.frame.h
   var x = dat.frame.x
   var y = dat.frame.y
+  var sw = size.width
+  var sh = size.height
 
-  tex.uScale = w/size.width
-  tex.vScale = h/size.height
-  tex.uOffset = ( size.width /2 - x)/w - 0.5
-  tex.vOffset = (-size.height/2 + y)/h + 0.5
+  // in Babylon 2.2 and below:
+  // tex.uScale = w/sw
+  // tex.vScale = h/sh
+  // tex.uOffset = ( sw /2 - x)/w - 0.5
+  // tex.vOffset = (-sh/2 + y)/h + 0.5
+  
+  // Babylon 2.3 and above:
+  tex.uScale =   w / sw
+  tex.vScale =   h / sh
+  tex.uOffset =  x / sw
+  tex.vOffset =  (sh-y-h)/sh
 }
 
 
