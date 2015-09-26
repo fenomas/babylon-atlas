@@ -71,6 +71,12 @@ Atlas.prototype.getTexture = function(frame) {
 }
 
 
+// set an existing texture's offsets etc.
+Atlas.prototype.setTextureToFrame = function(tex, frame) {
+  setTextureSettings(this, frame, tex)
+}
+
+
 
 Atlas.prototype.makeSpriteMesh = function(frame, material) {
   var BAB = this._BABYLON
