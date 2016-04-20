@@ -10,6 +10,7 @@ the `texture` APIs work with the texture's `uvScale`/`uvOffset` properties.
 
 ** Updates: **
 
+ * v0.4.0: Allow passing in JSON object instead of a URL 
  * v0.3.0: API changed to reflect parallel support for mesh/texture-based usage 
  * v0.2.0: supports breaking changes in Babylon.js v2.3. 
    When using Babylon 2.2 and below, move this
@@ -38,10 +39,15 @@ Live demo [here](http://andyhall.github.io/babylon-atlas/example/).
 Expects texture atlas JSON to look something like this:
 
 ```json
-      {"frames":{
+{
+    "meta": {
+        "size": {"w":256,"h":256}
+    },
+    "frames": {
         "frame_001": {"frame": {"x":0, "y":32,"w":22,"h":18} },
         "frame_002": {"frame": {"x":53,"y":0, "w":22,"h":21} }
-      }}
+    }
+}
 ```
 which is, I guess, a sort-of standard format.
 

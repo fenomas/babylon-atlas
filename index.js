@@ -29,18 +29,20 @@ function Atlas(imgURL, jsonURL, scene, BAB, noMip, sampling) {
 	var self = this
 
 	// json loader and event
-	loader(jsonURL, function (err, data) {
-		if (err) throw err
-		self._data = data
-		dataReady = true
-		if (texReady) initSelf(self);
-	})
+	if (typeof jsonURL === 'string') {
+		loader(jsonURL, function (err, data) {
+			if (err) throw err
+			self._data = data
+			initData(self)
+		})
+	} else if (typeof jsonURL === 'object') {
+		// if passed an object, assume it's the JSON
+		self._data = jsonURL
+		initData(self)
+	}
 
 	// texture loader and event
-	this._baseTexture = new BAB.Texture(imgURL, scene, noMip, true, sampling, function () {
-		texReady = true
-		if (dataReady) initSelf(self);
-	})
+	this._baseTexture = new BAB.Texture(imgURL, scene, noMip, true, sampling)
 
 	// atlas will almost always need alpha
 	this._baseTexture.hasAlpha = true
@@ -53,7 +55,7 @@ function Atlas(imgURL, jsonURL, scene, BAB, noMip, sampling) {
 		"frame_002": {"frame": {"x":53,"y":0, "w":22,"h":21} }
 	}}
 */
-function initSelf(self) {
+function initData(self) {
 	var list = Object.keys(self._data.frames)
 	for (var i = 0; i < list.length; i++) {
 		self.frames.push(list[i])
@@ -189,9 +191,8 @@ function getFrameData(self, frame) {
 // set the plane mesh's UVs to display that part of the texture
 
 function setMeshUVs(self, mesh, frameDat) {
-	var size = self._baseTexture.getSize()
-	var sw = size.width
-	var sh = size.height
+	var sw = self._data.meta.size.w
+	var sh = self._data.meta.size.h
 	var x = frameDat.frame.x / sw
 	var y = frameDat.frame.y / sh
 	var w = frameDat.frame.w / sw
@@ -213,9 +214,8 @@ function setMeshUVs(self, mesh, frameDat) {
 // Same thing but for textures
 
 function setTextureUVs(self, tex, frameDat) {
-	var size = self._baseTexture.getSize()
-	var sw = size.width
-	var sh = size.height
+	var sw = self._data.meta.size.w
+	var sh = self._data.meta.size.h
 	var x = frameDat.frame.x
 	var y = frameDat.frame.y
 	var w = frameDat.frame.w
