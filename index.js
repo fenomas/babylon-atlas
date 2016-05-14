@@ -1,8 +1,13 @@
 /* global BABYLON */
 
-module.exports = Atlas
+//Optional support for loading json remotely
+if(typeof require=="function"&&require) {
+	module.exports = Atlas
 
-var loader = require('load-json-xhr')
+	var loader = require('load-json-xhr')
+} else {
+	var loader = function() { console.error("JSON loader not active") };
+}
 
 
 
