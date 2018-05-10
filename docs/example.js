@@ -53,14 +53,22 @@ mesh2.position.x = 1
 // make a mesh manually and set its texture to be a sprite
 var mesh3 = BABYLON.Mesh.CreatePlane('m3', 1, scene)
 mesh3.material = new BABYLON.StandardMaterial('mat', scene)
-mesh3.material.specularColor = new BABYLON.Color3(0,0,0)
-mesh3.material.emissiveColor = new BABYLON.Color3(1,1,1)
+mesh3.material.specularColor = new BABYLON.Color3(0, 0, 0)
+mesh3.material.emissiveColor = new BABYLON.Color3(1, 1, 1)
 mesh3.material.backFaceCulling = false
 mesh3.position.y = .8
 mesh3.position.z = -1
 mesh3.position.x = -1
 
 mesh3.material.diffuseTexture = myAtlas.makeSpriteTexture(6)
+
+var num2 = 0
+var fr2 = [4, 5, 6]
+setInterval(function () {
+	if (!myAtlas.frames.length) return // json not loaded yet
+	num2 = (num2 + 1) % fr2.length
+	atlas.setTextureFrame(mesh3.material.diffuseTexture, fr2[num2])
+}, 1000)
 
 
 
