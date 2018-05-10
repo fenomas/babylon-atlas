@@ -32,7 +32,7 @@ mat.diffuseTexture = atlas.createSpriteTexture('player_walk')
 atlas.setTextureFrame(mat.diffuseTexture, 'player_jump')
 ```
 
-Live demo [here](http://andyhall.github.io/babylon-atlas/example/).
+Live demo [here](http://andyhall.github.io/babylon-atlas/index.html).
 
 ### Format
 
