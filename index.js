@@ -1,12 +1,12 @@
 /* global BABYLON */
 
 //Optional support for loading json remotely
+var loader
 if (typeof require === "function" && require) {
 	module.exports = Atlas
-
-	var loader = require('load-json-xhr')
+	loader = require('load-json-xhr')
 } else {
-	var loader = function () { console.error("JSON loader not active") }
+	loader = function () { console.error("JSON loader not active") }
 }
 
 
@@ -29,8 +29,6 @@ function Atlas(imgURL, jsonURL, scene, BAB, noMip, sampling) {
 
 	this.frames = []
 
-	var dataReady = false
-	var texReady = false
 	var self = this
 
 	// json loader and event
