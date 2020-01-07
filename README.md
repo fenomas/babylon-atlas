@@ -8,8 +8,9 @@ Babylon.js, depending on whether you want to work with meshes or textures.
 Behind the scenes, the `mesh` APIs deal with vertex UV values, while 
 the `texture` APIs work with the texture's `uvScale`/`uvOffset` properties.
 
-** Updates: **
+**Updates:**
 
+ * v0.6.0: Removes dependencies, cleanup
  * v0.4.0: Allow passing in JSON object instead of a URL 
  * v0.3.0: API changed to reflect parallel support for mesh/texture-based usage 
  * v0.2.0: supports breaking changes in Babylon.js v2.3. 
@@ -32,7 +33,7 @@ mat.diffuseTexture = atlas.createSpriteTexture('player_walk')
 atlas.setTextureFrame(mat.diffuseTexture, 'player_jump')
 ```
 
-Live demo [here](http://andyhall.github.io/babylon-atlas/index.html).
+Live demo [here](http://andyhall.github.io/babylon-atlas/).
 
 ### Format
 
@@ -57,13 +58,18 @@ which is, I guess, a sort-of standard format.
 npm install babylon-atlas
 ```
 
-To run demo locally:
+To hack on things locally:
 
 ```shell
 cd babylon-atlas
 npm install
-npm test
+npm test        # serves local demo
+npm run build   # rebuilds local demo
 ```
+
+Note that the `test`/`build` scripts use webpack, which I 
+keep installed globally. If you don't, you'll need to do 
+`npm i -D webpack webpack-cli webpack-dev-server` or similar.
 
 ### API
 

@@ -1,15 +1,7 @@
-/* global BABYLON */
-
-//Optional support for loading json remotely
-var loader
-if (typeof require === "function" && require) {
-	module.exports = Atlas
-	loader = require('load-json-xhr')
-} else {
-	loader = function () { console.error("JSON loader not active") }
-}
 
 
+module.exports = Atlas
+Atlas.version = require('../package.json').version
 
 
 /*
@@ -33,11 +25,15 @@ function Atlas(imgURL, jsonURL, scene, BAB, noMip, sampling) {
 
 	// json loader and event
 	if (typeof jsonURL === 'string') {
-		loader(jsonURL, function (err, data) {
-			if (err) throw err
-			self._data = data
-			initData(self)
-		})
+		fetch(jsonURL)
+			.then(response => response.json())
+			.then(data => {
+				self._data = data
+				initData(self)
+			})
+			.catch(err => {
+				console.warn('Error loading json:', err)
+			})
 	} else if (typeof jsonURL === 'object') {
 		// if passed an object, assume it's the JSON
 		self._data = jsonURL
@@ -200,8 +196,9 @@ function setMeshUVs(self, mesh, frameDat) {
 	var y = frameDat.frame.y / sh
 	var w = frameDat.frame.w / sw
 	var h = frameDat.frame.h / sh
+	var BAB = self._BABYLON
 
-	var uvs = mesh.getVerticesData(BABYLON.VertexBuffer.UVKind)
+	var uvs = mesh.getVerticesData(BAB.VertexBuffer.UVKind)
 	uvs[0] = x
 	uvs[1] = 1 - y - h
 	uvs[2] = x + w
@@ -210,7 +207,7 @@ function setMeshUVs(self, mesh, frameDat) {
 	uvs[5] = 1 - y
 	uvs[6] = x
 	uvs[7] = 1 - y
-	mesh.updateVerticesData(BABYLON.VertexBuffer.UVKind, uvs)
+	mesh.updateVerticesData(BAB.VertexBuffer.UVKind, uvs)
 }
 
 

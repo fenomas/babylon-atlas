@@ -14,7 +14,7 @@ var plane = BABYLON.Mesh.CreateGround('ground', 5, 5, 1, scene)
 
 
 // atlas constructor
-var createAtlas = require('../')
+var createAtlas = require('..')
 
 // make an atlas for a given image+JSON
 var myAtlas = createAtlas('sprites.png', 'sprites.json', scene, BABYLON)
@@ -67,7 +67,7 @@ var fr2 = [4, 5, 6]
 setInterval(function () {
 	if (!myAtlas.frames.length) return // json not loaded yet
 	num2 = (num2 + 1) % fr2.length
-	atlas.setTextureFrame(mesh3.material.diffuseTexture, fr2[num2])
+	myAtlas.setTextureFrame(mesh3.material.diffuseTexture, fr2[num2])
 }, 1000)
 
 
