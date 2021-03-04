@@ -87,7 +87,7 @@ Atlas.prototype.makeSpriteMesh = function (frame, material) {
 	}
 
 	// basic plane mesh
-	var mesh = this._BABYLON.Mesh.CreatePlane('atlas sprite', 1, this._scene, true)
+	var mesh = this._BABYLON.Mesh.CreatePlane('atlas_sprite', 1, this._scene, true)
 	mesh.material = material
 	mesh.material.diffuseTexture = this._baseTexture
 	mesh._currentAtlasFrame = null
@@ -104,15 +104,13 @@ Atlas.prototype.makeSpriteMesh = function (frame, material) {
 Atlas.prototype.setMeshFrame = function (mesh, frame) {
 	if (frame === mesh._currentAtlasFrame) return
 
-	// defer if needed
-	if (!this._ready) {
-		var self = this
-		setTimeout(function () { self.setMeshFrame(mesh, frame) }, 10)
-		return
-	} else {
+	if (this._ready) {
 		var frameDat = getFrameData(this, frame)
 		setMeshUVs(this, mesh, frameDat)
 		mesh._currentAtlasFrame = frame
+	} else {
+		// defer if json isn't loaded yet
+		setTimeout(this.setMeshFrame.bind(this, mesh, frame), 50)
 	}
 }
 
