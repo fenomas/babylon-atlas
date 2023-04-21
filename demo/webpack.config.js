@@ -10,10 +10,9 @@ module.exports = {
 		path: path.resolve('..', 'docs'),
 		filename: 'bundle.js',
 	},
+	stats: "minimal",
 	devServer: {
-		contentBase: path.resolve('..', 'docs'),
-		inline: true,
+		static: path.resolve('..', 'docs'),
 		host: "0.0.0.0",
-		stats: "minimal",
 	},
 }

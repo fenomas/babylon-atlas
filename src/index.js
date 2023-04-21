@@ -1,22 +1,23 @@
 
+import packageJSON from '../package.json'
+var version = packageJSON.version
 
-module.exports = Atlas
-Atlas.version = require('../package.json').version
-
+import { Texture } from '@babylonjs/core/Materials/Textures/texture'
+import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial'
+import { CreatePlane } from '@babylonjs/core/Meshes/Builders/planeBuilder'
+import { VertexBuffer } from '@babylonjs/core/Buffers/buffer'
+import { Mesh } from '@babylonjs/core/Meshes/mesh'
 
 /*
 *  Atlas constructor - keeps the json data and a base texture
 */
 
 
-function Atlas(imgURL, jsonURL, scene, BAB, noMip, sampling) {
-	if (!(this instanceof Atlas)) {
-		return new Atlas(imgURL, jsonURL, scene, BAB, noMip, sampling)
-	}
+export function Atlas(imgURL, jsonURL, scene, noMip, sampling) {
 
+	this.version = version
 	this._ready = false
 	this._scene = scene
-	this._BABYLON = BAB
 	this._data = null
 
 	this.frames = []
@@ -41,7 +42,7 @@ function Atlas(imgURL, jsonURL, scene, BAB, noMip, sampling) {
 	}
 
 	// texture loader and event
-	this._baseTexture = new BAB.Texture(imgURL, scene, noMip, true, sampling)
+	this._baseTexture = new Texture(imgURL, scene, noMip, true, sampling)
 
 	// atlas will almost always need alpha
 	this._baseTexture.hasAlpha = true
@@ -75,22 +76,26 @@ function initData(self) {
 // return a plane-like sprite mesh showing the given atlas frame
 
 Atlas.prototype.makeSpriteMesh = function (frame, material) {
-	var BAB = this._BABYLON
 	if (!frame) frame = 0
 
 	// make a material unless one was passed in
 	if (!material) {
-		material = new BAB.StandardMaterial('spriteMat', this._scene)
-		material.specularColor = new BAB.Color3(0, 0, 0)
-		material.emissiveColor = new BAB.Color3(1, 1, 1)
-		material.backFaceCulling = false
+		material = new StandardMaterial('spriteMat', this._scene)
+		material.specularColor.set(0, 0, 0)
+		material.emissiveColor.set(1, 1, 1)
+		material.backFaceCulling = true
 	}
 
 	// basic plane mesh
-	var mesh = this._BABYLON.Mesh.CreatePlane('atlas_sprite', 1, this._scene, true)
+	var mesh = CreatePlane('atlas_sprite', {
+		size: 1,
+		updatable: true,
+		sideOrientation: Mesh.DOUBLESIDE,
+	}, this._scene)
+
+	material.diffuseTexture = this._baseTexture
 	mesh.material = material
-	mesh.material.diffuseTexture = this._baseTexture
-	mesh._currentAtlasFrame = null
+	mesh['_currentAtlasFrame'] = null
 
 	// set to correct frame
 	this.setMeshFrame(mesh, frame)
@@ -194,18 +199,19 @@ function setMeshUVs(self, mesh, frameDat) {
 	var y = frameDat.frame.y / sh
 	var w = frameDat.frame.w / sw
 	var h = frameDat.frame.h / sh
-	var BAB = self._BABYLON
 
-	var uvs = mesh.getVerticesData(BAB.VertexBuffer.UVKind)
-	uvs[0] = x
-	uvs[1] = 1 - y - h
-	uvs[2] = x + w
-	uvs[3] = 1 - y - h
-	uvs[4] = x + w
-	uvs[5] = 1 - y
-	uvs[6] = x
-	uvs[7] = 1 - y
-	mesh.updateVerticesData(BAB.VertexBuffer.UVKind, uvs)
+	var uvs = mesh.getVerticesData(VertexBuffer.UVKind)
+
+	uvs[0] = uvs[8] = x
+	uvs[1] = uvs[9] = 1 - y - h
+	uvs[2] = uvs[10] = x + w
+	uvs[3] = uvs[11] = 1 - y - h
+	uvs[4] = uvs[12] = x + w
+	uvs[5] = uvs[13] = 1 - y
+	uvs[6] = uvs[14] = x
+	uvs[7] = uvs[15] = 1 - y
+
+	mesh.updateVerticesData(VertexBuffer.UVKind, uvs)
 }
 
 

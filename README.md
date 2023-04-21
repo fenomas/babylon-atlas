@@ -10,6 +10,7 @@ the `texture` APIs work with the texture's `uvScale`/`uvOffset` properties.
 
 **Updates:**
 
+ * v0.7.0: Takes babylon as a peer dependency, now uses export/import
  * v0.6.0: Removes dependencies, cleanup
  * v0.4.0: Allow passing in JSON object instead of a URL 
  * v0.3.0: API changed to reflect parallel support for mesh/texture-based usage 
@@ -21,7 +22,7 @@ the `texture` APIs work with the texture's `uvScale`/`uvOffset` properties.
 
 ```javascript
 var createAtlas = require('babylon-atlas')
-var atlas = createAtlas('sprites.png', 'sprites.json', scene, BABYLON)
+var atlas = createAtlas('sprites.png', 'sprites.json', scene)
 
 // making a plane mesh showing frames from the atlas
 var mesh = atlas.makeSpriteMesh('player_walk')
@@ -33,7 +34,7 @@ mat.diffuseTexture = atlas.createSpriteTexture('player_walk')
 atlas.setTextureFrame(mat.diffuseTexture, 'player_jump')
 ```
 
-Live demo [here](http://andyhall.github.io/babylon-atlas/).
+Live demo [here](http://andyhall.github.io/babylon-atlas/) (outdated).
 
 ### Format
 
@@ -58,27 +59,19 @@ which is, I guess, a sort-of standard format.
 npm install babylon-atlas
 ```
 
-To hack on things locally:
+Hacking on the local demo is broken right now!
 
-```shell
-cd babylon-atlas
-npm install
-npm test        # serves local demo
-npm run build   # rebuilds local demo
-```
+todo: update to use modern imported version of babylon.
 
-Note that the `test`/`build` scripts use webpack, which I 
-keep installed globally. If you don't, you'll need to do 
-`npm i -D webpack webpack-cli webpack-dev-server` or similar.
 
 ### API
 
 ```javascript
-// require the constructor
-var createAtlas = require('babylon-atlas')
+// import
+import { Atlas } from 'babylon-atlas'
 
 // create an atlas - last two args optional
-var atlas = createAtlas( imgURL, jsonURL, scene, BABYLON, noMipMap, samplingMode )
+var atlas = createAtlas( imgURL, jsonURL, scene, noMipMap, samplingMode )
 
 // frame names are accessible as an array of strings
 // this will be empty until the atlas loads, but other APIs will still work

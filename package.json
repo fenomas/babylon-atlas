@@ -1,7 +1,7 @@
 {
   "name": "babylon-atlas",
-  "version": "0.6.0",
-  "description": "A texture atlas manager for Babylon.js",
+  "version": "0.7.0",
+  "description": "A texture atlas module for Babylon.js",
   "main": "src/index.js",
   "files": [
     "./src"
@@ -21,9 +21,12 @@
     "test": "cd demo; webpack-dev-server",
     "build": "cd demo; webpack"
   },
+  "peerDependencies": {
+    "@babylonjs/core": "^6.0.0"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/andyhall/babylon-atlas"
+    "url": "https://github.com/fenomas/babylon-atlas"
   },
   "author": "Andy Hall",
   "license": "MIT"
